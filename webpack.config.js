@@ -148,7 +148,7 @@ else {
 const config = {
   bail: FAIL_ON_ERROR,
   entry: {
-    'bundle': './src/bootstrap.js',
+    'bundle': './src/goatstone/main.js',
     'main': './src/style/main.scss'
   },
   output: {
