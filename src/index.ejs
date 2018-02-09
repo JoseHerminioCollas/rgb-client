@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <title> Cycle.js Tour </title>
+  <% if (!htmlWebpackPlugin.options.MODE_DEV_SERVER) { %><link href="<%= webpack.assetsByChunkName['main'][1] %>" rel="stylesheet"><% } %>
+</head>
+<body>
+<header>
+Cycle.js Tour
+</header>
+<main>
+<div id="app-container">div</div>
+</main>
+
+<!-- keep the following lines -->
+<% if (!htmlWebpackPlugin.options.MODE_DEV_SERVER) { %><script src="<%= Object.prototype.toString.call(webpack.assetsByChunkName['bundle']) === '[object Array]' ? webpack.assetsByChunkName['bundle'][0] : webpack.assetsByChunkName['bundle'] %>"></script><% } %>
+
+</body>
+</html>

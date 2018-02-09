@@ -1,0 +1,61 @@
+@import "variables";
+
+html {
+  font-family: Arial,sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+header {
+  font-size: 1.6em;
+  font-weight: 900;
+  background: #ccc;
+  padding: 6px;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4
+h5,
+h6 {
+  color: $brand-primary;
+  margin: 3px 1px;
+}
+
+label {
+  color: #555;
+  display: inline-block;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 3px;
+}
+
+input[type=button] {
+  padding: 6px;
+  margin: 3px;
+  color: #666;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+section.bike-information {
+  padding: 12px;
+  background-image: linear-gradient(#ccc, white);
+}
+
+@media screen and (min-width:$break-point) {
+  p.crop {
+    width: 90%;
+  }
+  img.logo {
+    transition: opacity 0.5s;
+  }
+  img.logo:hover {
+    opacity: 0.4;
+  }
+}
