@@ -1,42 +1,45 @@
 /*
- ColorSlider : a component for selecting a color valule 0 - 255
+ EffectSelect : a component for selecting an effect from a series of choices
 */
 import xs from 'xstream'
-import { h, div, input } from '@cycle/dom'
+import { h, div, input, label } from '@cycle/dom'
 
 function EffectSelect(sources) {
-  // pass the specific DOM element
-  // sources.redSelectDOM sources.DOM
-  const className = '.rangeSlider'
-  const newValue$ = sources.DOM.select(className)
-    .events('input')
+  const copy = sources.copy
+  const newValue$ = sources.DOM
+    .select('[name=effect-choice]')
+    .events('change')
     .map(ev => ev.target.value)
-    .startWith(10)
-
-  const props$ = xs.of({
-    label: 'Weight', unit: 'kg', min: 40, value: 70, max: 150
-  })
+    .startWith(0)
+  const props$ = xs.of({ value: 0 })
   const state$ = props$
     .map(props => newValue$
       .map(val => ({
-        label: 'Red',
-        unit: '',
-        min: 0,
         value: val,
-        max: 255
       }))
       .startWith(props)
     )
     .flatten()
     .remember()
 
-  const vdom$ = state$.map(({ label, min, max, value }) =>
-    h('div', {}, [div([
-      div([
-        label, ' ', value,
-        input(className, { attrs: { type: 'range', min, max, value } })
+  // should copy be another stream?????
+  const vdom$ = state$.map(({ value }) =>
+    h('article', {}, [
+      div(['Selected Value::: ', value]),
+      h('h3', { style: { fontWeight: 900 } }, [copy.effect.title]),
+      label('', {}, [
+        copy.effect.options.glow,
+        input('.b', { attrs: { type: 'radio', name: 'effect-choice', value: 0 } }),
       ]),
-    ])])
+      label('', {}, [
+        copy.effect.options.chase,
+        input('.b', { attrs: { type: 'radio', name: 'effect-choice', value: 1 } }),
+      ]),
+      label('', {}, [
+        copy.effect.options.redBlue,
+        input('.b', { attrs: { type: 'radio', name: 'effect-choice', value: 2 } }),
+      ]),
+    ])
   )
 
   const sinks = {
