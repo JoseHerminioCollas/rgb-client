@@ -4,14 +4,14 @@
 import xs from 'xstream'
 import { h, div, input } from '@cycle/dom'
 
-function ColorSlider(sources) {
+function EffectSelect(sources) {
   // pass the specific DOM element
   // sources.redSelectDOM sources.DOM
   const className = '.rangeSlider'
   const newValue$ = sources.DOM.select(className)
     .events('input')
     .map(ev => ev.target.value)
-    .startWith(100)
+    .startWith(10)
 
   const props$ = xs.of({
     label: 'Weight', unit: 'kg', min: 40, value: 70, max: 150
@@ -40,10 +40,10 @@ function ColorSlider(sources) {
   )
 
   const sinks = {
-    red: newValue$,
+    val: newValue$,
     DOM: vdom$
   }
   return sinks
 }
 
-export default ColorSlider
+export default EffectSelect

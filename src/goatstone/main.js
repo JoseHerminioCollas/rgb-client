@@ -7,6 +7,7 @@ import {
 import bootstrap from '../bootstrap'
 import copy from './copy'
 import ColorSlider from './components/color-slider'
+import EffectSelect from './components/effect-select'
 
 const title = h('header', { style: { color: '#333' } }, copy.title)
 
@@ -39,23 +40,29 @@ function main(sources) {
   const colorSliderRedDOM$ = colorSlider.DOM // red component DOM
   const redValue$ = colorSlider.red // red value
 
+  const effectSelect = EffectSelect({ DOM: sources.DOM })
+  const esD$ = effectSelect.DOM
+  const esV$ = effectSelect.val
+  console.log(effectSelect, esD$, esV$)
+
   const wheelCount$ = sources.DOM
     .select('[name=wheel-count]')
     .events('change')
     .map(ev => ev.target.value)
     .startWith(22)
 
-  const state$ = xs.combine(wheelCount$, redValue$)
-    .map(([wheelCountV, redValue]) =>
-      [wheelCountV, redValue])
+  const state$ = xs.combine(wheelCount$, redValue$, esV$)
+    .map(([wheelCountV, redValue, esV]) =>
+      [wheelCountV, redValue, esV])
 
   // view
-  const vdom$ = xs.combine(state$, colorSliderRedDOM$)
-    .map(([data, redSlider]) => {
+  const vdom$ = xs.combine(state$, colorSliderRedDOM$, esD$)
+    .map(([data, redSlider, eSelect]) => {
       const displayData = JSON.stringify(data)
       return h('section.bike-information',
         [
           title,
+          eSelect,
           wheelCount,
           redSlider,
           p(`Values::  ${displayData}`)
