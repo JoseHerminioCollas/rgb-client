@@ -7,25 +7,40 @@ import { h, div, input } from '@cycle/dom'
 function ColorSlider(sources) {
   // pass the specific DOM element
   // sources.redSelectDOM sources.DOM
-  const colorSelectRed$ = sources.DOM.select('.red')
+  const className = '.rangeSlider'
+  const newValue$ = sources.DOM.select(className)
     .events('input')
     .map(ev => ev.target.value)
-    .startWith(0)
+    .startWith(100)
 
-  const state$ = xs.of(1111)
-  const colorSelect = div([
-    div([
-      'xxx',
-      input('.red', { attrs: { type: 'range', min: 0, max: 255, value: 200 } })
-    ]),
-  ])
+  const props$ = xs.of({
+    label: 'Weight', unit: 'kg', min: 40, value: 70, max: 150
+  })
+  const state$ = props$
+    .map(props => newValue$
+      .map(val => ({
+        label: 'Red',
+        unit: '',
+        min: 0,
+        value: val,
+        max: 255
+      }))
+      .startWith(props)
+    )
+    .flatten()
+    .remember()
 
-  const vdom$ = state$.map(state =>
-    h('div', {}, ['vdom', state, colorSelect])
+  const vdom$ = state$.map(({ label, min, max, value }) =>
+    h('div', {}, [label, div([
+      div([
+        label, ' ', value,
+        input(className, { attrs: { type: 'range', min, max, value } })
+      ]),
+    ])])
   )
 
   const sinks = {
-    red: colorSelectRed$,
+    red: newValue$,
     DOM: vdom$
   }
   return sinks

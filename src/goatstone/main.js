@@ -6,7 +6,6 @@ import {
 } from '@cycle/dom'
 import bootstrap from '../bootstrap'
 import copy from './copy'
-import ComponentOne from './components/component-one'
 import ColorSlider from './components/color-slider'
 
 const title = h('header', { style: { color: '#333' } }, copy.title)
@@ -36,38 +35,32 @@ const wheelCount = h('article', {}, [
 bootstrap()
 function main(sources) {
 
-  const parentStream$ = xs.of(33)
-
-  const c1 = ComponentOne({ b: 2, parentStream: parentStream$ })
-  const cOneV$ = c1.v
-  const sPeriod$ = c1.s
-
   const colorSlider = ColorSlider({ DOM: sources.DOM })
-  const colorSliderRedDOM$ = colorSlider.DOM
-  const colorSelectRed$ = colorSlider.red
+  const colorSliderRedDOM$ = colorSlider.DOM // red component DOM
+  const redValue$ = colorSlider.red // red value
 
-  // intent actions const actions = intent(sources.DOM)
   const wheelCount$ = sources.DOM
     .select('[name=wheel-count]')
     .events('change')
     .map(ev => ev.target.value)
     .startWith(22)
 
-  const state$ = xs.combine(wheelCount$, colorSelectRed$, cOneV$, sPeriod$)
-    .map(([wheelCountV, colorSelectRed, cOneV, sPeriod]) =>
-      [wheelCountV, colorSelectRed, cOneV, sPeriod])
+  const state$ = xs.combine(wheelCount$, redValue$)
+    .map(([wheelCountV, redValue]) =>
+      [wheelCountV, redValue])
 
   // view
-  const vdom$ = xs.combine(state$, colorSliderRedDOM$).map(([data, redSlider]) => {
-    const displayData = JSON.stringify(data)
-    return h('section.bike-information',
-      [
-        title,
-        wheelCount,
-        redSlider,
-        p(`Values::  ${displayData}`)
-      ])
-  })
+  const vdom$ = xs.combine(state$, colorSliderRedDOM$)
+    .map(([data, redSlider]) => {
+      const displayData = JSON.stringify(data)
+      return h('section.bike-information',
+        [
+          title,
+          wheelCount,
+          redSlider,
+          p(`Values::  ${displayData}`)
+        ])
+    })
   return { DOM: vdom$ }
 }
 
