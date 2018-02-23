@@ -24,7 +24,6 @@ function EffectSelect(sources) {
   const vdom$ = state$.map(({ displayValue }) =>
     h('article', {}, [
       h('h3', { style: { fontWeight: 900 } }, [copy.effect.title,
-        'ddd',
         h('span', { style: { color: 'black', fontSize: '.7em' } }, [' ', displayValue]),
       ]),
       label('', {}, [
