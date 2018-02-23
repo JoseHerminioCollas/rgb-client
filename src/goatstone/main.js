@@ -7,6 +7,7 @@ import bootstrap from '../bootstrap'
 import copy from './copy'
 import ColorSlider from './components/color-slider'
 import EffectSelect from './components/effect-select'
+import ComponentOne from './components/component-one'
 
 const title = h('header', { style: { color: '#333' } }, copy.title)
 
@@ -21,17 +22,24 @@ function main(sources) {
   const effectSelectVDOM$ = effectSelect.DOM
   const effectSelectValue$ = effectSelect.val
 
+  const componentOne = ComponentOne({ DOM: sources.DOM })
+  const componentOneVDOM$ = componentOne.DOM
+  const componentOneValue$ = componentOne.value
+
+  console.log(componentOne, componentOneValue$, componentOneVDOM$)
+
   const state$ = xs.combine(redValue$, effectSelectValue$)
     .map(([redValue, esV]) =>
       [redValue, esV])
 
-  const vdom$ = xs.combine(state$, colorSliderRedDOM$, effectSelectVDOM$)
-    .map(([data, redSlider, effectSelectVDOM]) => {
+  const vdom$ = xs.combine(state$, colorSliderRedDOM$, effectSelectVDOM$, componentOneVDOM$)
+    .map(([data, redSlider, effectSelectVDOM, componentOneVDOM]) => {
       const displayData = JSON.stringify(data)
       return h('section.bike-information',
         [
           title,
           effectSelectVDOM,
+          componentOneVDOM,
           redSlider,
           p(`Values::  ${displayData}`)
         ])
