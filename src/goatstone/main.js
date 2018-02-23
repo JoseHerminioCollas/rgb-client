@@ -9,14 +9,14 @@ import ColorSlider from './components/color-slider'
 import EffectSelect from './components/effect-select'
 import ComponentOne from './components/component-one'
 
-const title = h('header', { style: { color: '#333' } }, copy.title)
+const titleVDOM = h('header', { style: { color: '#333' } }, copy.title)
 
 bootstrap()
 function main(sources) {
 
-  const colorSlider = ColorSlider({ DOM: sources.DOM })
-  const colorSliderRedDOM$ = colorSlider.DOM // red component DOM
-  const redValue$ = colorSlider.red // red value
+  const redColorSlider = ColorSlider({ DOM: sources.DOM })
+  const redColorSliderVDOM$ = redColorSlider.DOM
+  const redColorSliderValue$ = redColorSlider.value
 
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
@@ -26,21 +26,19 @@ function main(sources) {
   const componentOneVDOM$ = componentOne.DOM
   const componentOneValue$ = componentOne.value
 
-  console.log(componentOne, componentOneValue$, componentOneVDOM$)
+  const state$ = xs.combine(redColorSliderValue$, effectSelectValue$, componentOneValue$)
+    .map(([redColorSliderValue, effectSelectValue, componentOneValue]) =>
+      [redColorSliderValue, effectSelectValue, componentOneValue])
 
-  const state$ = xs.combine(redValue$, effectSelectValue$)
-    .map(([redValue, esV]) =>
-      [redValue, esV])
-
-  const vdom$ = xs.combine(state$, colorSliderRedDOM$, effectSelectVDOM$, componentOneVDOM$)
-    .map(([data, redSlider, effectSelectVDOM, componentOneVDOM]) => {
+  const vdom$ = xs.combine(state$, redColorSliderVDOM$, effectSelectVDOM$, componentOneVDOM$)
+    .map(([data, redColorSliderVDOM, effectSelectVDOM, componentOneVDOM]) => {
       const displayData = JSON.stringify(data)
       return h('section.bike-information',
         [
-          title,
+          titleVDOM,
           effectSelectVDOM,
           componentOneVDOM,
-          redSlider,
+          redColorSliderVDOM,
           p(`Values::  ${displayData}`)
         ])
     })

@@ -5,8 +5,6 @@ import xs from 'xstream'
 import { h, div, input } from '@cycle/dom'
 
 function ColorSlider(sources) {
-  // pass the specific DOM element
-  // sources.redSelectDOM sources.DOM
   const className = '.rangeSlider'
   const newValue$ = sources.DOM.select(className)
     .events('input')
@@ -19,7 +17,7 @@ function ColorSlider(sources) {
   const state$ = props$
     .map(props => newValue$
       .map(val => ({
-        label: 'Red',
+        label: 'Color',
         unit: '',
         min: 0,
         value: val,
@@ -39,11 +37,10 @@ function ColorSlider(sources) {
     ])])
   )
 
-  const sinks = {
-    red: newValue$,
+  return {
+    value: newValue$,
     DOM: vdom$
   }
-  return sinks
 }
 
 export default ColorSlider
