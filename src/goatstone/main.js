@@ -1,7 +1,7 @@
 import xs from 'xstream'
 import { run } from '@cycle/run'
 import {
-  label, input, div,
+  label, input,
   h, p, makeDOMDriver
 } from '@cycle/dom'
 import bootstrap from '../bootstrap'
@@ -32,12 +32,6 @@ const wheelCount = h('article', {}, [
 
   ]),
 ])
-const colorSelect = div([
-  div([
-    copy.color.rangeSelect.red,
-    input('.red', { attrs: { type: 'range', min: 0, max: 255, value: 200 } })
-  ]),
-])
 
 bootstrap()
 function main(sources) {
@@ -48,9 +42,8 @@ function main(sources) {
   const cOneV$ = c1.v
   const sPeriod$ = c1.s
 
-  const colorSlider = ColorSlider({ DOM: sources.DOM, parentStream: parentStream$ })
-  const colorVal$ = colorSlider.v
-
+  const colorSlider = ColorSlider({ DOM: sources.DOM })
+  const colorSliderRedDOM$ = colorSlider.DOM
   const colorSelectRed$ = colorSlider.red
 
   // intent actions const actions = intent(sources.DOM)
@@ -60,19 +53,18 @@ function main(sources) {
     .map(ev => ev.target.value)
     .startWith(22)
 
-  const a$ = xs.of(1)
-  const state$ = xs.combine(wheelCount$, colorSelectRed$, a$, cOneV$, sPeriod$, colorVal$)
-    .map(([wheelCountV, colorSelectRed, a, cOneV, sPeriod, colorVal]) =>
-      [wheelCountV, colorSelectRed, a, cOneV, sPeriod, colorVal])
+  const state$ = xs.combine(wheelCount$, colorSelectRed$, cOneV$, sPeriod$)
+    .map(([wheelCountV, colorSelectRed, cOneV, sPeriod]) =>
+      [wheelCountV, colorSelectRed, cOneV, sPeriod])
 
   // view
-  const vdom$ = state$.map(data => {
+  const vdom$ = xs.combine(state$, colorSliderRedDOM$).map(([data, redSlider]) => {
     const displayData = JSON.stringify(data)
     return h('section.bike-information',
       [
         title,
-        colorSelect,
         wheelCount,
+        redSlider,
         p(`Values::  ${displayData}`)
       ])
   })
