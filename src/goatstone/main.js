@@ -14,9 +14,14 @@ const titleVDOM = h('header', { style: { color: '#333' } }, copy.title)
 bootstrap()
 function main(sources) {
 
-  const redColorSlider = ColorSlider({ DOM: sources.DOM })
+  // color components need distinct selectors (DOM) in order to create distinct values
+  const redColorSlider = ColorSlider({ DOM: sources.DOM, copy: { label: `Red` }, selector: 'red-select' })
   const redColorSliderVDOM$ = redColorSlider.DOM
   const redColorSliderValue$ = redColorSlider.value
+
+  const greenColorSlider = ColorSlider({ DOM: sources.DOM, copy: { label: 'Green' }, selector: 'green-select' })
+  const greenColorSliderVDOM$ = greenColorSlider.DOM
+  const greenColorSliderValue$ = greenColorSlider.value
 
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
@@ -26,12 +31,14 @@ function main(sources) {
   const componentOneVDOM$ = componentOne.DOM
   const componentOneValue$ = componentOne.value
 
-  const state$ = xs.combine(redColorSliderValue$, effectSelectValue$, componentOneValue$)
-    .map(([redColorSliderValue, effectSelectValue, componentOneValue]) =>
-      [redColorSliderValue, effectSelectValue, componentOneValue])
+  const state$ = xs.combine(
+    redColorSliderValue$, effectSelectValue$, componentOneValue$, greenColorSliderValue$)
+    .map(([redColorSliderValue, effectSelectValue, componentOneValue, greenColorSliderValue]) =>
+      [redColorSliderValue, effectSelectValue, componentOneValue, greenColorSliderValue])
 
-  const vdom$ = xs.combine(state$, redColorSliderVDOM$, effectSelectVDOM$, componentOneVDOM$)
-    .map(([data, redColorSliderVDOM, effectSelectVDOM, componentOneVDOM]) => {
+  const vdom$ = xs.combine(
+    state$, redColorSliderVDOM$, effectSelectVDOM$, componentOneVDOM$, greenColorSliderVDOM$)
+    .map(([data, redColorSliderVDOM, effectSelectVDOM, componentOneVDOM, greenColorSliderVDOM]) => {
       const displayData = JSON.stringify(data)
       return h('section.bike-information',
         [
@@ -39,6 +46,7 @@ function main(sources) {
           effectSelectVDOM,
           componentOneVDOM,
           redColorSliderVDOM,
+          greenColorSliderVDOM,
           p(`Values::  ${displayData}`)
         ])
     })

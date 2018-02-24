@@ -5,9 +5,12 @@ import xs from 'xstream'
 import { h, div, input } from '@cycle/dom'
 
 function ColorSlider(sources) {
-  const className = '.rangeSlider'
-  const newValue$ = sources.DOM.select(className)
-    .events('input')
+  const className = '.range-slider'
+  // const selector = 'red-select'
+  const selector = sources.selector
+  const copy = sources.copy
+  const newValue$ = sources.DOM.select(`input[data-id=${selector}]`)
+    .events('change')
     .map(ev => ev.target.value)
     .startWith(100)
 
@@ -17,7 +20,7 @@ function ColorSlider(sources) {
   const state$ = props$
     .map(props => newValue$
       .map(val => ({
-        label: 'Color',
+        label: copy.label,
         unit: '',
         min: 0,
         value: val,
@@ -31,8 +34,10 @@ function ColorSlider(sources) {
   const vdom$ = state$.map(({ label, min, max, value }) =>
     h('div', {}, [div([
       div([
-        label, ' ', value,
-        input(className, { attrs: { type: 'range', min, max, value } })
+        label,
+        input(className, {
+          attrs: { type: 'range', min, max, value, 'data-id': selector } }),
+        value,
       ]),
     ])])
   )
