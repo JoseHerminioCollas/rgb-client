@@ -29,6 +29,13 @@ function main(sources) {
   const greenColorSliderVDOM$ = greenColorSlider.DOM
   const greenColorSliderValue$ = greenColorSlider.value
 
+  const blueColorSlider = ColorSlider(
+    { DOM: sources.DOM,
+      copy: { label: 'Blue' },
+      selector: 'blue-select' })
+  const blueColorSliderVDOM$ = blueColorSlider.DOM
+  const blueColorSliderValue$ = blueColorSlider.value
+
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
   const effectSelectValue$ = effectSelect.val
@@ -39,17 +46,17 @@ function main(sources) {
 
   const state$ = xs.combine(
     redColorSliderValue$, effectSelectValue$,
-    componentOneValue$, greenColorSliderValue$)
+    componentOneValue$, greenColorSliderValue$, blueColorSliderValue$)
     .map(([redColorSliderValue, effectSelectValue,
-      componentOneValue, greenColorSliderValue]) =>
+      componentOneValue, greenColorSliderValue, blueColorSliderValue]) =>
       [redColorSliderValue, effectSelectValue,
-        componentOneValue, greenColorSliderValue])
+        componentOneValue, greenColorSliderValue, blueColorSliderValue])
 
   const vdom$ = xs.combine(
     state$, redColorSliderVDOM$, effectSelectVDOM$,
-    componentOneVDOM$, greenColorSliderVDOM$)
+    componentOneVDOM$, greenColorSliderVDOM$, blueColorSliderVDOM$)
     .map(([data, redColorSliderVDOM, effectSelectVDOM,
-      componentOneVDOM, greenColorSliderVDOM]) => {
+      componentOneVDOM, greenColorSliderVDOM, blueColorSliderVDOM]) => {
       const displayData = JSON.stringify(data)
       return h('section',
         [
@@ -58,6 +65,7 @@ function main(sources) {
           componentOneVDOM,
           redColorSliderVDOM,
           greenColorSliderVDOM,
+          blueColorSliderVDOM,
           p(`Values::  ${displayData}`)
         ])
     })
