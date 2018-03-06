@@ -52,7 +52,7 @@
     "html-webpack-plugin": "^2.9.0",
     "lodash.template": "^4.2.2",
     "mocha": "^3.4.2",
-    "moment": "^2.11.2",
+    "moment": "^2.21.0",
     "my-local-ip": "^1.0.0",
     "node-sass": "^4.5.3",
     "npmlog": "^2.0.2",
