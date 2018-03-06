@@ -8,11 +8,19 @@ import copy from './copy'
 import ColorSlider from './components/color-slider'
 import EffectSelect from './components/effect-select'
 import ComponentOne from './components/component-one'
+import ColorPicker from './components/color-picker'
 
 const titleVDOM = h('header', { style: { color: '#333' } }, copy.title)
 
 bootstrap()
 function main(sources) {
+
+  const colorPicker = ColorPicker({
+    DOM: sources.DOM,
+    initValues: [199, 199, 199]
+  })
+  const colorPickerVDOM$ = colorPicker.DOM
+  const colorPickerValue$ = colorPicker.value
 
   // color components need distinct selectors (DOM) in order to create distinct values
   const redColorSlider = ColorSlider(
@@ -46,17 +54,17 @@ function main(sources) {
 
   const state$ = xs.combine(
     redColorSliderValue$, effectSelectValue$,
-    componentOneValue$, greenColorSliderValue$, blueColorSliderValue$)
+    componentOneValue$, greenColorSliderValue$, blueColorSliderValue$, colorPickerValue$)
     .map(([redColorSliderValue, effectSelectValue,
-      componentOneValue, greenColorSliderValue, blueColorSliderValue]) =>
+      componentOneValue, greenColorSliderValue, blueColorSliderValue, colorPickerValue]) =>
       [redColorSliderValue, effectSelectValue,
-        componentOneValue, greenColorSliderValue, blueColorSliderValue])
+        componentOneValue, greenColorSliderValue, blueColorSliderValue, colorPickerValue])
 
   const vdom$ = xs.combine(
     state$, redColorSliderVDOM$, effectSelectVDOM$,
-    componentOneVDOM$, greenColorSliderVDOM$, blueColorSliderVDOM$)
+    componentOneVDOM$, greenColorSliderVDOM$, blueColorSliderVDOM$, colorPickerVDOM$)
     .map(([data, redColorSliderVDOM, effectSelectVDOM,
-      componentOneVDOM, greenColorSliderVDOM, blueColorSliderVDOM]) => {
+      componentOneVDOM, greenColorSliderVDOM, blueColorSliderVDOM, colorPickerVDOM]) => {
       const displayData = JSON.stringify(data)
       return h('section',
         [
@@ -66,6 +74,7 @@ function main(sources) {
           redColorSliderVDOM,
           greenColorSliderVDOM,
           blueColorSliderVDOM,
+          colorPickerVDOM,
           p(`Values::  ${displayData}`)
         ])
     })
