@@ -31,31 +31,41 @@ function main(sources) {
 
   const state$ = xs.combine(
     effectSelectValue$,
-    componentOneValue$, colorPickerValue$)
-    .map(([effectSelectValue,
-      componentOneValue, colorPickerValue]) =>
-      [effectSelectValue,
-        componentOneValue, colorPickerValue])
+    componentOneValue$,
+    colorPickerValue$
+  ).map(([
+    effectSelectValue,
+    componentOneValue,
+    colorPickerValue
+  ]) =>
+    [
+      effectSelectValue,
+      componentOneValue,
+      colorPickerValue
+    ])
 
   const vdom$ = xs.combine(
-    state$, effectSelectVDOM$,
-    componentOneVDOM$, colorPickerVDOM$)
-    .map(([
-      data,
-      effectSelectVDOM,
-      componentOneVDOM,
-      colorPickerVDOM
-    ]) => {
-      const displayData = JSON.stringify(data)
-      return h('section',
-        [
-          titleVDOM,
-          effectSelectVDOM,
-          componentOneVDOM,
-          colorPickerVDOM,
-          p(`Values::  ${displayData}`)
-        ])
-    })
+    state$,
+    effectSelectVDOM$,
+    componentOneVDOM$,
+    colorPickerVDOM$
+  ).map(([
+    data,
+    effectSelectVDOM,
+    componentOneVDOM,
+    colorPickerVDOM
+  ]) => {
+    const displayData = JSON.stringify(data)
+    return h('section',
+      [
+        titleVDOM,
+        effectSelectVDOM,
+        componentOneVDOM,
+        colorPickerVDOM,
+        p(`Values::  ${displayData}`)
+      ])
+  })
+
   return { DOM: vdom$ }
 }
 

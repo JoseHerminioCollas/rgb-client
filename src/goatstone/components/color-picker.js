@@ -30,9 +30,16 @@ function ColorPicker(sources) {
   const blueColorSliderValue$ = blueColorSlider.value
 
   const state$ = xs.combine(
-    redColorSliderValue$, greenColorSliderValue$, blueColorSliderValue$)
+    redColorSliderValue$,
+    greenColorSliderValue$,
+    blueColorSliderValue$
+  )
     .map(([red, green, blue]) =>
-      [red, green, blue])
+      [
+        red,
+        green,
+        blue
+      ])
 
   const vdom$ = xs.combine(
     state$,
@@ -56,7 +63,11 @@ function ColorPicker(sources) {
 
   return {
     DOM: vdom$,
-    value: xs.of(0)
+    value: xs.combine(
+      redColorSliderValue$,
+      greenColorSliderValue$,
+      blueColorSliderValue$
+    )
   }
 }
 
