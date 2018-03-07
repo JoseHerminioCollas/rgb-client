@@ -67,6 +67,7 @@
   "private": true,
   "dependencies": {
     "@cycle/dom": "^20.1.0",
+    "@cycle/http": "^14.9.0",
     "@cycle/run": "^4.1.0",
     "xstream": "^11.2.0"
   }

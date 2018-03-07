@@ -1,8 +1,7 @@
 import xs from 'xstream'
 import { run } from '@cycle/run'
-import {
-  h, p, makeDOMDriver
-} from '@cycle/dom'
+import { h, p, makeDOMDriver } from '@cycle/dom'
+import { makeHTTPDriver } from '@cycle/http'
 import bootstrap from '../bootstrap'
 import copy from './copy'
 import EffectSelect from './components/effect-select'
@@ -13,6 +12,26 @@ const titleVDOM = h('header', { style: { color: '#333' } }, copy.title)
 
 bootstrap()
 function main(sources) {
+
+  const url = 'http://localhost:3000/rgb/light/set/glow'
+  const user$ = sources.HTTP
+    .select('users')
+    .flatten()
+    .map(res => `${res.text} xxx`)
+
+  const click$ = sources.DOM.select('[data-id=component-one]').events('click')
+  const request$ = click$
+    .map(() =>
+      ({
+        url,
+        category: 'users',
+        method: 'POST'
+      }))
+    .startWith({
+      url,
+      category: 'users',
+      method: 'POST'
+    })
 
   const colorPicker = ColorPicker({
     DOM: sources.DOM,
@@ -32,28 +51,31 @@ function main(sources) {
   const state$ = xs.combine(
     effectSelectValue$,
     componentOneValue$,
-    colorPickerValue$
+    colorPickerValue$,
+    user$,
   ).map(([
     effectSelectValue,
     componentOneValue,
-    colorPickerValue
+    colorPickerValue,
+    user,
   ]) =>
     [
       effectSelectValue,
       componentOneValue,
-      colorPickerValue
+      colorPickerValue,
+      user,
     ])
 
   const vdom$ = xs.combine(
     state$,
     effectSelectVDOM$,
     componentOneVDOM$,
-    colorPickerVDOM$
+    colorPickerVDOM$,
   ).map(([
     data,
     effectSelectVDOM,
     componentOneVDOM,
-    colorPickerVDOM
+    colorPickerVDOM,
   ]) => {
     const displayData = JSON.stringify(data)
     return h('section',
@@ -62,11 +84,13 @@ function main(sources) {
         effectSelectVDOM,
         componentOneVDOM,
         colorPickerVDOM,
-        p(`Values::  ${displayData}`)
+        p(`:::  ${displayData} :::`)
       ])
   })
-
-  return { DOM: vdom$ }
+  return { DOM: vdom$, HTTP: request$ }
 }
-
-run(main, { DOM: makeDOMDriver('#app-container') })
+const drivers = {
+  HTTP: makeHTTPDriver(),
+  DOM: makeDOMDriver('#app-container')
+}
+run(main, drivers)
