@@ -17,10 +17,15 @@ function main(sources) {
   const user$ = sources.HTTP
     .select('users')
     .flatten()
-    .map(res => `${res.text} xxx`)
+    .map(res => `;;; ${res.text} ;;;`)
 
-  const click$ = sources.DOM.select('[data-id=component-one]').events('click')
-  const request$ = click$
+  const colorPicker = ColorPicker({
+    DOM: sources.DOM,
+    initValues: [199, 199, 199]
+  })
+  const colorPickerVDOM$ = colorPicker.DOM
+  const colorPickerValue$ = colorPicker.value
+  const request$ = colorPickerValue$
     .map(() =>
       ({
         url,
@@ -32,13 +37,6 @@ function main(sources) {
       category: 'users',
       method: 'POST'
     })
-
-  const colorPicker = ColorPicker({
-    DOM: sources.DOM,
-    initValues: [199, 199, 199]
-  })
-  const colorPickerVDOM$ = colorPicker.DOM
-  const colorPickerValue$ = colorPicker.value
 
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
