@@ -32,11 +32,6 @@ function main(sources) {
         category: 'users',
         method: 'POST'
       }))
-    .startWith({
-      url,
-      category: 'users',
-      method: 'POST'
-    })
 
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
@@ -62,7 +57,7 @@ function main(sources) {
       componentOneValue,
       colorPickerValue,
       user,
-    ])
+    ]).startWith([null])
 
   const vdom$ = xs.combine(
     state$,
