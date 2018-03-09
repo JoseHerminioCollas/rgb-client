@@ -6,7 +6,8 @@ const copy = {
     options: {
       glow: 'Glow',
       chase: 'Chase',
-      redBlue: 'Red Blue'
+      redBlue: 'Red Blue',
+      off: 'Off',
     }
   }
 }

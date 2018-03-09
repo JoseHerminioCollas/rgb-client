@@ -9,27 +9,25 @@ import ComponentOne from './components/component-one'
 import ColorPicker from './components/color-picker'
 
 const titleVDOM = h('header', { style: { color: '#333' } }, copy.title)
-// getColorRequest getEffectRequest
-function getColorRequest({ host, name, device, colorValue }) { // colorValue
-  console.log(' dd', host, name, device, colorValue)
-  const url = `${host}/${name}/${device}/color/${colorValue}`
+
+function getColorRequest({ host, name, device, colorValue }) {
+  const url =
+        `${host}/${name}/${device}/color/${colorValue[0]}/${colorValue[1]}/${colorValue[2]}`
   const request = {
     url,
     category: 'color',
     method: 'POST'
   }
-  request.query = colorValue
   return request
 }
-function getEffectRequest(d) {
-  console.log(' ef', d)
-  const url = 'http://localhost:3000/rgb/light/set/red-blue'
+function getEffectRequest({ host, name, device, value }) {
+  const url =
+        `${host}/${name}/${device}/effect/${value}`
   const request = {
     url,
     category: 'effect',
     method: 'POST'
   }
-  request.query = ''
   return request
 }
 const requestConfig =
@@ -58,6 +56,7 @@ function main(sources) {
   const effectSelectVDOM$ = effectSelect.DOM
   const effectSelectValue$ = effectSelect.val
   const effectRequest$ = effectSelectValue$
+    .map(effectValue => Object.assign(requestConfig, { value: effectValue }))
     .map(getEffectRequest)
   const componentOne = ComponentOne({ DOM: sources.DOM })
   const componentOneVDOM$ = componentOne.DOM
