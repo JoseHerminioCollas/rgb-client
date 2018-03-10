@@ -9,4 +9,4 @@ function getColorRequest({ host, name, device, colorValue }) {
   return request
 }
 
-export default getColorRequest
+module.exports = getColorRequest

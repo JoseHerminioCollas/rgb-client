@@ -9,4 +9,4 @@ function effectRequest({ host, name, device, value }) {
   return request
 }
 
-export default effectRequest
+module.exports = effectRequest
