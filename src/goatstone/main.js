@@ -9,7 +9,7 @@ import ComponentOne from './components/component-one'
 import ColorPicker from './components/color-picker'
 import colorRequest from './requests/color'
 import effectRequest from './requests/effect'
-import configRequest from './requests/config'
+import config from './config'
 
 const titleVDOM = h('header', { style: { color: '#00f' } }, copy.title)
 
@@ -28,14 +28,14 @@ function main(sources) {
   const colorPickerVDOM$ = colorPicker.DOM
   const colorPickerValue$ = colorPicker.value
   const colorRequest$ = colorPickerValue$
-    .map(colorValue => Object.assign(configRequest, { colorValue }))
+    .map(colorValue => Object.assign(config, { colorValue }))
     .map(colorRequest)
 
   const effectSelect = EffectSelect({ DOM: sources.DOM, copy })
   const effectSelectVDOM$ = effectSelect.DOM
   const effectSelectValue$ = effectSelect.val
   const effectRequest$ = effectSelectValue$
-    .map(effectValue => Object.assign(configRequest, { value: effectValue }))
+    .map(effectValue => Object.assign(config, { value: effectValue }))
     .map(effectRequest)
 
   const componentOne = ComponentOne({ DOM: sources.DOM })

@@ -1,6 +1,6 @@
-function effectRequest({ host, name, device, value }) {
+function effectRequest({ host, port, name, device, value }) {
   const url =
-        `${host}/${name}/${device}/effect/${value}`
+        `http://${host}:${port}/${name}/${device}/effect/${value}`
   const request = {
     url,
     category: 'effect',

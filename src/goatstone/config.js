@@ -1,6 +1,7 @@
 const config =
   {
-    host: 'http://localhost:3000',
+    host: 'rgb-iot.net',
+    port: '3000',
     name: 'rgb',
     device: 'light'
   }

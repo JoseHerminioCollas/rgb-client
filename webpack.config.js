@@ -160,7 +160,8 @@ const config = {
   cache: true,
   devtool: OPTIMIZE ? false : 'sourcemap',
   devServer: {
-    host: LOCALHOST ? 'localhost' : myLocalIp()
+    host: '0.0.0.0',
+    disableHostCheck: true
   },
   module: {
     rules: [
